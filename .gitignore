@@ -3,3 +3,6 @@ Dataset/
 # ignore test results
 *.png
 *.html
+# ignore python auto-generated files
+.python-version
+__pycache__
