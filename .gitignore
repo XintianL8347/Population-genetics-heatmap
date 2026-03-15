@@ -3,6 +3,8 @@ Dataset/
 # ignore test results
 *.png
 *.html
+*.gif
+*.mp4
 # ignore python auto-generated files
 .python-version
 __pycache__
