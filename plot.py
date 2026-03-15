@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from scipy.interpolate import Rbf
+from scipy.spatial import distance
 
-def plot_heatmap(df):
+def plot_heatmap(df, grid_points):
     # 1. Prepare Data (Using the distance we calculated earlier)
     # agg = df.groupby(['Lat', 'Long'])['Genetic_Distance'].mean().reset_index()
     # print(agg)
@@ -19,20 +20,26 @@ def plot_heatmap(df):
 
     # 3. Radial Basis Function (Rbf) Interpolation
     # This creates the smooth "heat" effect between points
-    rbf = Rbf(lons, lats, vals, function='linear', smooth=0.1)
-    print(rbf.A.shape)
-    z_mesh = rbf(lon_mesh, lat_mesh)
+    rbf = Rbf(lons, lats, vals, 
+              function='linear', smooth=0.1)
+    z_mesh = rbf(grid_lon, grid_lat)
+
+    # 3.1. Create the Radial Mask
+    # Calculate distance from every grid point to the nearest actual sample
+    sample_coords = np.c_[df['Long'], df['Lat']]
+    tree = distance.cdist(grid_points, sample_coords, 'euclidean')
+    min_dist = np.min(tree, axis=1).reshape(grid_lon.shape)
+
+    # C. Apply the Mask: Hide anything further than 5 degrees from a sample
+    # You can adjust '5.0' to make the blobs larger or smaller
+    z_mesh[min_dist > 5.0] = np.nan
 
     # 4. Plotting with Zoom
     fig = plt.figure(figsize=(12, 10))
     ax = plt.axes(projection=ccrs.PlateCarree())
 
     # --- THE ZOOM STEP ---
-    ax.set_extent([-50, 40, 35, 74], crs=ccrs.PlateCarree())
-
-    # Add Map Features
-    ax.add_feature(cfeature.LAND, facecolor='lightgrey')
-
+    # ax.set_extent([-50, 40, 35, 74], crs=ccrs.PlateCarree())
 
     # 1. Plot the Heatmap (Set a low zorder)
     heatmap = ax.contourf(grid_lon, grid_lat, z_mesh, levels=50, 
@@ -41,6 +48,8 @@ def plot_heatmap(df):
 
     # 2. Mask the Ocean (Set a higher zorder)
     # This draws a solid color over all ocean areas, covering the heatmap underneath
+    # Add Map Features
+    ax.add_feature(cfeature.LAND, facecolor='lightgrey')
     ax.add_feature(cfeature.OCEAN, facecolor='lightblue', edgecolor='none', zorder=2)
 
     # 3. Add Details (Set the highest zorder)

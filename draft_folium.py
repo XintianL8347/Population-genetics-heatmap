@@ -19,7 +19,7 @@ df['Genetic_Distance'] = df.apply(calc_dist, axis=1)
 
 # 4. Create 100-year bins (BP = Years Before Present)
 # Modern samples would be in Bin 0. 1000 BP would be in Bin 1000.
-df['Time_Bin'] = (df['Mean date (BP)'] // 100) * 100
+df['Time_Bin'] = (df['Mean date (BP)'] // 100) * 100 + 50
 gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df["Long"], df["Lat"]), crs="EPSG:4326")
 map = folium.Map(location=[15, 30], tiles="Cartodb dark_matter", zoom_start=2)
 heat_data = [[point.xy[1][0], point.xy[0][0], dist] for point, dist in zip(gdf.geometry, gdf["Genetic_Distance"])]
@@ -34,9 +34,9 @@ for time_bin in unique_bins:
     subset = gdf[gdf['Time_Bin'] == time_bin]
     # Create your geographic heatmap here using Lat, Long, and Genetic_Distance
     # savefig(f'heatmap_{time_bin}.png')
-    map = folium.Map(location=[15, 30], tiles="Cartodb dark_matter", zoom_start=2)
+    map = folium.Map(location=[55, -5], tiles="Cartodb dark_matter", zoom_start=3)
     heat_data = [[point.xy[1][0], point.xy[0][0], dist] for point, dist in zip(subset.geometry, subset["Genetic_Distance"])]
     # print(heat_data)
     plugins.HeatMap(heat_data, radius=25, blur=20, max_zoom=5).add_to(map)
 
-    map.save(f'heatmap_{1950-time_bin}.html')
+    map.save(f'heatmap_{int(1950-time_bin)}.html')
