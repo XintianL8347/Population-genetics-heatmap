@@ -57,9 +57,9 @@ def plot_heatmap(df:pd.DataFrame)-> None:
     # LAYER 4 (Top): The actual samples as dots
     ax.scatter(lons, lats, c=vals, cmap='jet', edgecolors='black', s=40, zorder=4, vmin=0, vmax=1)
 
-    cbar = plt.colorbar(heatmap, orientation='horizontal', pad=0.05, shrink=0.8)
+    cbar = plt.colorbar(heatmap, orientation='horizontal', pad=0.05)
     cbar.set_ticks([0, 0.2, 0.4, 0.6, 0.8, 1.0]) # Keep the labels consistent
-    cbar.set_label('Genetic Distance (0 = Identical to Iceland Reference)')
+    cbar.set_label('Genetic Distance (0 = Identical to Iceland Viking)', fontsize=18)
     plt.savefig('mordern_heatmap.png')
 
 plot_heatmap(df)
