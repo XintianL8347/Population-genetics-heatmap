@@ -60,6 +60,6 @@ def plot_heatmap(df:pd.DataFrame)-> None:
     cbar = plt.colorbar(heatmap, orientation='horizontal', pad=0.05)
     cbar.set_ticks([0, 0.2, 0.4, 0.6, 0.8, 1.0]) # Keep the labels consistent
     cbar.set_label('Genetic Distance (0 = Identical to Iceland Viking)', fontsize=18)
-    plt.savefig('mordern_heatmap.png')
+    plt.savefig('Results/mordern_heatmap2.png')
 
 plot_heatmap(df)
