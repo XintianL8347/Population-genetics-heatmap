@@ -8,3 +8,6 @@ Dataset/
 # ignore python auto-generated files
 .python-version
 __pycache__
+# ignore test scripts
+Scripts/stvideo.py
+*ipynb
