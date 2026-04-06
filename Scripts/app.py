@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import immortal
+import moving
 
 # import numpy as np
 import multimap
@@ -66,6 +67,7 @@ if st.session_state.show_animation_ui:
 
     # 2. User selects timeframe
     time_range = st.slider("BP Range", 700, 1300, (750, 1250), step=5)
+    st.write("NOTE: BP = the number of years before 1950")
     window = st.number_input(
         "Specify window size (defualt 100)",
         min_value=10,
@@ -131,3 +133,29 @@ if st.session_state.show_animation_ui:
                 st.video(video_bytes)
                 # st.download_button("Download Video", video_file, "viking_migration.mp4")
                 st.write("Video saved locally: viking_migration_immortal.mp4")
+
+    if algo == "Moving individual":
+        if st.button("Generate Animation"):
+            with st.spinner("Calculating Heatmaps..."):
+                fig = plt.figure(figsize=(10, 7))
+                ani = FuncAnimation(
+                    fig,
+                    moving.update,
+                    frames=range(time_range[1], time_range[0], -step),
+                    fargs=(fig, df_aDNA, window),
+                    repeat=False,
+                )
+                ani.save("viking_migration_moving.mp4", fps=10)
+
+                # 4. Display it in the Streamlit video player
+                # st.video("viking_migration_3drbf.mp4")
+
+                # 5. Provide a download button for the video file
+                # with open("viking_migration_3drbf.mp4", "rb") as f:
+                # st.video(f.read())
+                video_file = open("viking_migration_moving.mp4", "rb")
+                video_bytes = video_file.read()
+
+                st.video(video_bytes)
+                # st.download_button("Download Video", video_file, "viking_migration.mp4")
+                st.write("Video saved locally: viking_migration_moving.mp4")
