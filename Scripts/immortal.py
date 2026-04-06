@@ -7,10 +7,11 @@ from scipy.interpolate import Rbf
 
 
 # --- 2. THE PLOTTING FUNCTION (Simpler Version) ---
-def plot_viking_bin(fig, df_subset: pd.DataFrame, time_label: int, window: int) -> None:
+def plot_viking_bin(
+    fig, df_subset: pd.DataFrame, time_label: int, window: int, latest_world_state: dict
+):
     # print(df_subset["Site_ID"])
     # This dictionary will store the most recent {Site_ID: [Lat, Long, Distance]}
-    latest_world_state = {}
     for _, row in df_subset.iterrows():
         latest_world_state[row["Site_ID"]] = {
             "Lat": row["Lat"],
@@ -104,8 +105,8 @@ def plot_viking_bin(fig, df_subset: pd.DataFrame, time_label: int, window: int) 
     return (fig,)
 
 
-def update(t, fig, df, window):
+def update(t, fig, df, window, latest_world_state):
     fig.clear()  # Clear the old map
     subset = df[(df["Mean date (BP)"] >= (t - window)) & (t >= df["Mean date (BP)"])]
     # print(t)
-    plot_viking_bin(fig, subset, int(1950 - t), window)
+    plot_viking_bin(fig, subset, int(1950 - t), window, latest_world_state)

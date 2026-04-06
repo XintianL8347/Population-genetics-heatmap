@@ -112,11 +112,12 @@ if st.session_state.show_animation_ui:
                     df_aDNA["Lat"].astype(str) + "_" + df_aDNA["Long"].astype(str)
                 )
                 fig = plt.figure(figsize=(10, 7))
+                latest_world_state = {}
                 ani = FuncAnimation(
                     fig,
                     immortal.update,
                     frames=range(time_range[1], time_range[0], -step),
-                    fargs=(fig, df_aDNA, window),
+                    fargs=(fig, df_aDNA, window, latest_world_state),
                     repeat=False,
                 )
                 ani.save("viking_migration_immortal.mp4", fps=10)
@@ -138,11 +139,12 @@ if st.session_state.show_animation_ui:
         if st.button("Generate Animation"):
             with st.spinner("Calculating Heatmaps..."):
                 fig = plt.figure(figsize=(10, 7))
+                latest_world_state = {}
                 ani = FuncAnimation(
                     fig,
                     moving.update,
                     frames=range(time_range[1], time_range[0], -step),
-                    fargs=(fig, df_aDNA, window),
+                    fargs=(fig, df_aDNA, window, latest_world_state),
                     repeat=False,
                 )
                 ani.save("viking_migration_moving.mp4", fps=10)
