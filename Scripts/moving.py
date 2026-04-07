@@ -1,15 +1,13 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from scipy.interpolate import Rbf
 
 
 # --- 2. THE PLOTTING FUNCTION (Simpler Version) ---
-def plot_viking_bin(
-    fig, df_subset: pd.DataFrame, time_label: int, window: int, latest_world_state: dict
-):
+def plot_viking_bin(fig, df_subset: pd.DataFrame, time_label: int, window: int, latest_world_state: dict):
     # print(df_subset["Site_ID"])
     culture_group = df_subset.groupby("CultureID")
     for id, group in culture_group:
@@ -27,9 +25,7 @@ def plot_viking_bin(
     vals = site_data["Dist"].values
 
     # SHAPE ASSERTION: Ensure every Lat/Long has exactly one value
-    assert lons.shape == lats.shape == vals.shape, (
-        f"Data mismatch! Lons:{lons.shape}, Lats:{lats.shape}, Vals:{vals.shape}"
-    )
+    assert lons.shape == lats.shape == vals.shape, f"Data mismatch! Lons:{lons.shape}, Lats:{lats.shape}, Vals:{vals.shape}"
 
     if len(current_bin_df) < 3:
         print(f"  Skipping {time_label}: Too few data points.")

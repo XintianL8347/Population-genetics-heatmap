@@ -1,9 +1,9 @@
 # from matplotlib.animation import FuncAnimation
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from scipy.interpolate import Rbf
 
 
@@ -19,9 +19,7 @@ def create_3drbf(df):
 
 
 # --- 2. THE PLOTTING FUNCTION (Simpler Version) ---
-def plot_viking_bin(
-    fig, df_subset: pd.DataFrame, time_label: int, rbf_3d: Rbf, window: int
-) -> None:
+def plot_viking_bin(fig, df_subset: pd.DataFrame, time_label: int, rbf_3d: Rbf, window: int) -> None:
 
     lons_sub = df_subset["Long"].values
     lats_sub = df_subset["Lat"].values
@@ -52,9 +50,7 @@ def plot_viking_bin(
     # LAYER 1 (Bottom): The Heatmap
     # extend='both' helps smooth the color transition at the boundaries
     color_levels = np.linspace(0, 1, 51)
-    heatmap = ax.contourf(
-        grid_lon, grid_lat, z_mesh, levels=color_levels, cmap="jet", alpha=0.7, zorder=1
-    )
+    heatmap = ax.contourf(grid_lon, grid_lat, z_mesh, levels=color_levels, cmap="jet", alpha=0.7, zorder=1)
 
     # LAYER 2 (Middle): The Ocean Mask
     # This covers the rectangular "heat" that falls in the sea

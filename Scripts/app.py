@@ -1,14 +1,12 @@
-import streamlit as st
-import pandas as pd
+import animation
 import immortal
-import moving
-
-# import numpy as np
-import multimap
-import modern
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import interpolation
+import matplotlib.pyplot as plt
+import modern
+import moving
+import multimap
+import pandas as pd
+import streamlit as st
 
 # Open data and collect all the genetic pool columns
 df_aDNA = pd.read_excel("Dataset/Vikings_aDNA.xlsx")
@@ -74,90 +72,45 @@ if st.session_state.show_animation_ui:
         max_value=time_range[1] - time_range[0],
         value=100,
     )
-    step = st.number_input(
-        "Specify step size (defualt 10)", min_value=1, max_value=100, value=10
-    )
+    step = st.number_input("Specify step size (defualt 10)", min_value=1, max_value=100, value=10)
 
-    if algo == "3D-RBF":
-        if st.button("Generate Animation"):
-            with st.spinner("Calculating Heatmaps..."):
-                rbf_3d = interpolation.create_3drbf(df_aDNA)
-                fig = plt.figure(figsize=(10, 7))
-                ani = FuncAnimation(
-                    fig,
-                    interpolation.update,
-                    frames=range(time_range[1], time_range[0], -step),
-                    fargs=(fig, df_aDNA, rbf_3d, window),
-                    repeat=False,
-                )
-                ani.save("viking_migration_3drbf.mp4", fps=10)
+    if algo == "3D-RBF" and st.button("Generate Animation"):
+        with st.spinner("Calculating Heatmaps..."):
+            rbf_3d = interpolation.create_3drbf(df_aDNA)
+            fig = plt.figure(figsize=(10, 7))
+            animation.make_ani(
+                fig,
+                interpolation.update,
+                time_range,
+                step,
+                "viking_migration_3drbf.mp4",
+                (fig, df_aDNA, rbf_3d, window),
+            )
 
-                # 4. Display it in the Streamlit video player
-                # st.video("viking_migration_3drbf.mp4")
+    if algo == "Immortal individual" and st.button("Generate Animation"):
+        with st.spinner("Calculating Heatmaps..."):
+            df_aDNA["Site_ID"] = df_aDNA["Lat"].astype(str) + "_" + df_aDNA["Long"].astype(str)
+            fig = plt.figure(figsize=(10, 7))
+            latest_world_state = {}
 
-                # 5. Provide a download button for the video file
-                # with open("viking_migration_3drbf.mp4", "rb") as f:
-                # st.video(f.read())
-                video_file = open("viking_migration_3drbf.mp4", "rb")
-                video_bytes = video_file.read()
+            animation.make_ani(
+                fig,
+                immortal.update,
+                time_range,
+                step,
+                "viking_migration_immortal.mp4",
+                (fig, df_aDNA, window, latest_world_state),
+            )
 
-                st.video(video_bytes)
-                # st.download_button("Download Video", video_file, "viking_migration.mp4")
-                st.write("Video saved locally: viking_migration_3drbf.mp4")
-
-    if algo == "Immortal individual":
-        if st.button("Generate Animation"):
-            with st.spinner("Calculating Heatmaps..."):
-                df_aDNA["Site_ID"] = (
-                    df_aDNA["Lat"].astype(str) + "_" + df_aDNA["Long"].astype(str)
-                )
-                fig = plt.figure(figsize=(10, 7))
-                latest_world_state = {}
-                ani = FuncAnimation(
-                    fig,
-                    immortal.update,
-                    frames=range(time_range[1], time_range[0], -step),
-                    fargs=(fig, df_aDNA, window, latest_world_state),
-                    repeat=False,
-                )
-                ani.save("viking_migration_immortal.mp4", fps=10)
-
-                # 4. Display it in the Streamlit video player
-                # st.video("viking_migration_3drbf.mp4")
-
-                # 5. Provide a download button for the video file
-                # with open("viking_migration_3drbf.mp4", "rb") as f:
-                # st.video(f.read())
-                video_file = open("viking_migration_immortal.mp4", "rb")
-                video_bytes = video_file.read()
-
-                st.video(video_bytes)
-                # st.download_button("Download Video", video_file, "viking_migration.mp4")
-                st.write("Video saved locally: viking_migration_immortal.mp4")
-
-    if algo == "Moving individual":
-        if st.button("Generate Animation"):
-            with st.spinner("Calculating Heatmaps..."):
-                fig = plt.figure(figsize=(10, 7))
-                latest_world_state = {}
-                ani = FuncAnimation(
-                    fig,
-                    moving.update,
-                    frames=range(time_range[1], time_range[0], -step),
-                    fargs=(fig, df_aDNA, window, latest_world_state),
-                    repeat=False,
-                )
-                ani.save("viking_migration_moving.mp4", fps=10)
-
-                # 4. Display it in the Streamlit video player
-                # st.video("viking_migration_3drbf.mp4")
-
-                # 5. Provide a download button for the video file
-                # with open("viking_migration_3drbf.mp4", "rb") as f:
-                # st.video(f.read())
-                video_file = open("viking_migration_moving.mp4", "rb")
-                video_bytes = video_file.read()
-
-                st.video(video_bytes)
-                # st.download_button("Download Video", video_file, "viking_migration.mp4")
-                st.write("Video saved locally: viking_migration_moving.mp4")
+    if algo == "Moving individual" and st.button("Generate Animation"):
+        with st.spinner("Calculating Heatmaps..."):
+            fig = plt.figure(figsize=(10, 7))
+            latest_world_state = {}
+            animation.make_ani(
+                fig,
+                moving.update,
+                time_range,
+                step,
+                "viking_migration_moving.mp4",
+                (fig, df_aDNA, window, latest_world_state),
+            )

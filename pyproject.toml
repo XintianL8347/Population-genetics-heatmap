@@ -23,3 +23,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "streamlit>=1.30.0",
 ]
+[tool.ruff.lint]
+select = ["E", "F", "B", "UP", "I", "SIM"]
+[tool.ruff]
+line-length = 200
