@@ -1,12 +1,13 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from scipy.interpolate import Rbf
 
 
 def aDNA_pre_process(df):
+    # Collect all the genetic pool columns
     z_cols = [col for col in df.columns if col.startswith("Z_")]
 
     # Calculate the "baseline" (average Iceland Viking ref)
@@ -21,7 +22,7 @@ def aDNA_pre_process(df):
 
 
 # The multi-heatmap plotting function
-def plot_acient_bin(df_subset: pd.DataFrame, time_label: int) -> None:
+def plot_acient_bin(df_subset: pd.DataFrame, time_label: int):
     # Average the data points on the same location
     site_data = df_subset.groupby(["Lat", "Long"])["Dist"].mean().reset_index()
 
@@ -31,16 +32,13 @@ def plot_acient_bin(df_subset: pd.DataFrame, time_label: int) -> None:
     vals = site_data["Dist"].values
 
     # Ensure every Lat/Long has exactly one value
-    assert lons.shape == lats.shape == vals.shape, (
-        f"Data mismatch! Lons:{lons.shape}, Lats:{lats.shape}, Vals:{vals.shape}"
-    )
+    assert lons.shape == lats.shape == vals.shape, f"Data mismatch! Lons:{lons.shape}, Lats:{lats.shape}, Vals:{vals.shape}"
 
     # Skip the time bin if too few data points are available
     if len(site_data) < 3:
-        # print(f"Skipping {time_label}: Too few data points.")
         return
 
-    # Create a grid for the heatmap (slightly larger than the map zoom so no sharp edges shown)
+    # Create a zoomed grid for the heatmap (slightly larger than the map zoom so no sharp edges shown)
     grid_lon, grid_lat = np.mgrid[-60:50:200j, 30:80:200j]
 
     # Calculate the "heat"
@@ -94,9 +92,7 @@ def plot_acient_bin(df_subset: pd.DataFrame, time_label: int) -> None:
     cbar = plt.colorbar(heatmap, orientation="horizontal", pad=0.05)
     cbar.set_ticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])  # Keep the labels consistent
     cbar.set_label("Genetic Distance (0 = Identical to Iceland Viking)")
-    # Add title and save the map
+    # Add title, shrink margin, and return the map
     plt.title(f"Time bin: {time_label - 50} -  {time_label + 50}")
     plt.tight_layout()
-    # plt.savefig(f"Results/heatmap_{time_label}.png")
-    # plt.close()
     return fig

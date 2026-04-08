@@ -1,3 +1,33 @@
+#!/usr/bin/env python3
+"""
+app.py
+
+Description:
+This program will run a website, and according to user's choice, generate a single mordern genetic heatmap,
+multiple ancient genetic heatmaps across time bins, and/or an animation of ancient genetic heatmaps
+using algorithms from corresponding imported scripts.
+All the genetic distances are calculated with reference to Icelandic Vikings.
+
+User-defined module: animation, immortal, interpolation, modern, moving, multimap
+Non-standard modules: matplotlib, pandas, streamlit
+
+Procedure:
+0. Open internal data and offer options on the web page
+1. Execute different logics (modern map, multiple maps, animation) based on the user's choice
+    1.5. If animation is chosen, allow the user customize parameters
+2. Display the generated plots or video on the web page
+
+Input: None
+Output: A web app, animation videos [optional]
+
+Usage : source .venv/bin/activate
+        streamlit run Scripts/app.py
+
+Version: 1.1
+Date: 2026-04-08
+Name: Xintian Liu
+"""
+
 import animation
 import immortal
 import interpolation
