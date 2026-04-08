@@ -18,4 +18,4 @@ def make_ani(fig, update_fun, time_range, step, filename, fargs):
 
     st.video(video_bytes)
     # st.download_button("Download Video", video_file, "viking_migration.mp4")
-    st.write(f"Video saved locally: {filename}")
+    st.write(f"**Video saved locally: {filename}**")

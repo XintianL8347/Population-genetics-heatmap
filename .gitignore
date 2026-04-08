@@ -11,3 +11,5 @@ __pycache__
 # ignore test scripts
 Scripts/stvideo.py
 *ipynb
+test*
+draft*

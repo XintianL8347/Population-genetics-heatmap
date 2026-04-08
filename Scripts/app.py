@@ -32,19 +32,25 @@ if st.button("Acient Dataset - Multiple Maps"):
 
         # Create as many columns as there are years
         cols = st.columns(2)
+        n_plot = 0
+        skipped = []
 
-        for i, t in enumerate(sorted(df_aDNA["Time_Bin"].unique())):
-            with cols[i % 2]:
-                current_bin = df_aDNA[df_aDNA["Time_Bin"] == t]
-                # 1. Generate the fig using your logic function
-                yr = int(1950 - t)
-                fig = multimap.plot_acient_bin(current_bin, yr)
-                if fig:
+        for t in sorted(df_aDNA["Time_Bin"].unique()):
+            current_bin = df_aDNA[df_aDNA["Time_Bin"] == t]
+            # 1. Generate the fig using your logic function
+            yr = int(1950 - t)
+            fig = multimap.plot_acient_bin(current_bin, yr)
+            if fig:
+                with cols[n_plot % 2]:
                     # 2. Display in the specific column
-                    st.subheader(f"Year: {yr} BP")
+                    st.subheader(f"Year: {yr}")
                     st.pyplot(fig)
-                else:
-                    st.markdown(f"Skipping {yr} BP: Too few data points.")
+                n_plot += 1
+            else:
+                skipped.append(yr)
+                # st.markdown(f"Skipping {yr}: Too few data points.")
+        if skipped:
+            st.write(f":large_orange_diamond: **Skipped {len(skipped)} time bins due to too few data points:** " + ", ".join(map(str, skipped)))
 
 if "show_animation_ui" not in st.session_state:
     st.session_state.show_animation_ui = False
@@ -65,7 +71,7 @@ if st.session_state.show_animation_ui:
 
     # 2. User selects timeframe
     time_range = st.slider("BP Range", 700, 1300, (750, 1250), step=5)
-    st.write("NOTE: BP = the number of years before 1950")
+    st.caption(":red-background[NOTE:] *BP = the number of years before 1950*")
     window = st.number_input(
         "Specify window size (defualt 100)",
         min_value=10,
