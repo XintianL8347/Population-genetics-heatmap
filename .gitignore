@@ -9,7 +9,7 @@ Dataset/
 .python-version
 __pycache__
 # ignore test scripts
-Scripts/stvideo.py
+Scripts/plot.py
 *ipynb
 test*
 draft*
