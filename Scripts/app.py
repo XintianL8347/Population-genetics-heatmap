@@ -8,7 +8,7 @@ multiple ancient genetic heatmaps across time bins, and/or an animation of ancie
 using algorithms from corresponding imported scripts.
 All the genetic distances are calculated with reference to Icelandic Vikings.
 
-User-defined module: animation, immortal, interpolation, modern, moving, multimap
+User-defined module: animation, interpolation, linear_migration, modern, multimap, site_turnover
 Non-standard modules: matplotlib, pandas, streamlit
 
 Procedure:
@@ -29,16 +29,16 @@ Name: Xintian Liu
 """
 
 import animation
-import immortal
 import interpolation
+import linear_migration
 import matplotlib.pyplot as plt
 import modern
-import moving
 import multimap
 import pandas as pd
+import site_turnover
 import streamlit as st
 
-# Open data and collect all the genetic pool columns
+# Prepare data
 df_aDNA = pd.read_excel("Dataset/Vikings_aDNA.xlsx")
 df_modern = pd.read_excel("Dataset/ModernSamples/GeneticDistances.xlsx")
 
@@ -94,7 +94,7 @@ if st.session_state.show_animation_ui:
     # 1. User selects algorithm in sidebar
     algo = st.selectbox(
         "Please Choose Algorithm",
-        ("3D-RBF", "Immortal individual", "Moving individual"),
+        ("3D-RBF", "Site Turnover", "Linear Migration"),
         index=None,
         placeholder="Select to continue",
     )
@@ -118,12 +118,13 @@ if st.session_state.show_animation_ui:
                 fig,
                 interpolation.update,
                 time_range,
+                window,
                 step,
-                "viking_migration_3drbf.mp4",
+                "viking_genemap_3drbf.mp4",
                 (fig, df_aDNA, rbf_3d, window),
             )
 
-    if algo == "Immortal individual" and st.button("Generate Animation"):
+    if algo == "Site Turnover" and st.button("Generate Animation"):
         with st.spinner("Calculating Heatmaps..."):
             df_aDNA["Site_ID"] = df_aDNA["Lat"].astype(str) + "_" + df_aDNA["Long"].astype(str)
             fig = plt.figure(figsize=(10, 7))
@@ -131,22 +132,24 @@ if st.session_state.show_animation_ui:
 
             animation.make_ani(
                 fig,
-                immortal.update,
+                site_turnover.update,
                 time_range,
+                window,
                 step,
-                "viking_migration_immortal.mp4",
+                "viking_genemap_turnover.mp4",
                 (fig, df_aDNA, window, latest_world_state),
             )
 
-    if algo == "Moving individual" and st.button("Generate Animation"):
+    if algo == "Linear Migration" and st.button("Generate Animation"):
         with st.spinner("Calculating Heatmaps..."):
             fig = plt.figure(figsize=(10, 7))
             latest_world_state = {}
             animation.make_ani(
                 fig,
-                moving.update,
+                linear_migration.update,
                 time_range,
+                window,
                 step,
-                "viking_migration_moving.mp4",
+                "viking_genemap_migration.mp4",
                 (fig, df_aDNA, window, latest_world_state),
             )

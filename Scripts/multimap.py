@@ -34,7 +34,7 @@ def plot_acient_bin(df_subset: pd.DataFrame, time_label: int):
     # Ensure every Lat/Long has exactly one value
     assert lons.shape == lats.shape == vals.shape, f"Data mismatch! Lons:{lons.shape}, Lats:{lats.shape}, Vals:{vals.shape}"
 
-    # Skip the time bin if too few data points are available
+    # Skip the time bin if too few data points are available (more than 3 datapoints are needed per timebin for 2d-rbf prediction)
     if len(site_data) < 3:
         return
 
