@@ -1,10 +1,9 @@
-# ignore raw data
-Dataset/
+# ignore unused raw data
+Dataset/Unused
 # ignore test results
-*.png
 *.html
 *.gif
-*.mp4
+Old_results/
 # ignore python auto-generated files
 .python-version
 __pycache__
@@ -13,3 +12,7 @@ Scripts/plot.py
 *ipynb
 test*
 draft*
+# ignore compressed files
+*.zip
+*gz
+*.tar
