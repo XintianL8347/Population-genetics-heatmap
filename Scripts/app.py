@@ -3,7 +3,7 @@
 app.py
 
 Description:
-This program will run a website, and according to user's choice, generate a single mordern genetic heatmap,
+This program will run a website, and according to user's choice, generate a single modern genetic heatmap,
 multiple ancient genetic heatmaps across time bins, and/or an animation of ancient genetic heatmaps
 using algorithms from corresponding imported scripts.
 All the genetic distances are calculated with reference to Icelandic Vikings (CultureID = 1000).
@@ -20,7 +20,9 @@ Procedure:
 Input: None (however, internal dataset required)
 Output: A web app, visualizations, animation videos [optional]
 
-Usage : source .venv/bin/activate
+Usage : uv run streamlit run Scripts/app.py [recommended]
+        OR,
+        source .venv/bin/activate
         streamlit run Scripts/app.py
 
 Version: 1.1
